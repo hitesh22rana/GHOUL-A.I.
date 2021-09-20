@@ -6,6 +6,8 @@ import datetime
 import os
 from requests import get
 import cv2
+import wikipedia
+import webbrowser
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -27,12 +29,12 @@ def TakeCommand():
     with sr.Microphone() as source:
 
         print("Listening...")
-        time.sleep(0.5)
+        time.sleep(0.2)
         r.pause_threshold = 1.5
         audio = r.listen(source,timeout=2,phrase_time_limit=10)
 
         try:
-            print("Recognizing...")
+            print("Recognizing...\n")
             time.sleep(0.5)
             query = r.recognize_google(audio , language='en-in')
             print(f"User said : {query}")
@@ -81,7 +83,7 @@ def wish():
     else:
         speak("Good Evening Sir!")
 
-    speak("How Can i Help you!")
+    speak("I am Ghoul! Your Personal AI Assistant.. How Can I Help you!")
 
 
 
@@ -121,9 +123,42 @@ if __name__ == "__main__":
             cv2.destroyAllWindows()
 
         
-        # feature to get own ipaddress
+        # feature to get your own ipaddress
 
         elif ("ip address") in query:
             ip = get('https://api.ipify.org').text
             speak(f"Your IP Address is : {ip}")      
 
+
+        # feature to open wikipedia
+
+        elif "wikipedia" in query:
+            speak("Searching wikipedia...")
+            query = query.replace("wikipedia" , "")
+            results = wikipedia.summary(query, sentences = 2)
+            speak("According to Wikipedia : ")
+            speak(results)
+            print(results)
+
+        # feature to open youtube
+
+        elif "open youtube" in query:
+            speak("What should i search on youtube!")
+            try:
+                task = TakeCommand().lower()
+                webbrowser.open(f"https://www.youtube.com/results?search_query={task}")
+            
+            except Exception as e:
+                speak("Unable to Search! sorry!")
+
+
+        # feature to open Google and search on it
+
+        elif "open google" in query:
+            speak("What should i search on Google!")
+            try:
+                task = TakeCommand().lower()
+                webbrowser.open(f"{task}")
+
+            except Exception as e:
+                speak("Unable to Search! sorry!")
