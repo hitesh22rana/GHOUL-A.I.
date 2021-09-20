@@ -4,6 +4,8 @@ import pyaudio
 import speech_recognition as sr
 import datetime
 import os
+from requests import get
+import cv2
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -86,6 +88,7 @@ def wish():
 if __name__ == "__main__":
     wish()
     while(True):
+    
         query = TakeCommand().lower()
         
         #Logic for tasks
@@ -101,3 +104,26 @@ if __name__ == "__main__":
 
         elif ("open command prompt") in query:
             os.system("start cmd")
+
+        
+        # feature to open camera
+
+        elif ("open camera") in query or ("open web camera") in query:
+            speak("Opening Camera!")
+
+            cap = cv2.VideoCapture(0)
+            while True:
+                ret , img = cap.read()
+                cv2.imshow('webcam', img)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            cap.release()
+            cv2.destroyAllWindows()
+
+        
+        # feature to get own ipaddress
+
+        elif ("ip address") in query:
+            ip = get('https://api.ipify.org').text
+            speak(f"Your IP Address is : {ip}")      
+
