@@ -2,12 +2,13 @@ import time
 import pyttsx3
 import pyaudio
 import speech_recognition as sr
-
+import datetime
+import os
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voices' , voices[1].id)
-engine.setProperty('rate',180)
+engine.setProperty('rate',175)
 
 
 def speak(audio):
@@ -65,9 +66,38 @@ def TakeCommand_Hindi():
         return query
 
 
+# Wish Function
+def wish():
+    hour = int(datetime.datetime.now().hour)
+
+    if(hour > 0 and hour < 12):
+        speak("Good Morning Sir!")
+
+    elif(hour >= 12 and hour < 18):
+        speak("Good Afternoon Sir!")
+
+    else:
+        speak("Good Evening Sir!")
+
+    speak("How Can i Help you!")
+
+
+
 if __name__ == "__main__":
-    # speak("Good after noon sir!")
+    wish()
     while(True):
-        # TakeCommand()
-        # TakeCommand_Hindi()
-        pass
+        query = TakeCommand().lower()
+        
+        #Logic for tasks
+
+        # feature to open notepad
+
+        if ("open notepad") in query:
+            path = "C:\\Windows\\system32\\notepad.exe"
+            os.startfile(path)
+
+
+        # feature to open cmd
+
+        elif ("open command prompt") in query:
+            os.system("start cmd")
